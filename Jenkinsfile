@@ -41,28 +41,28 @@ pipeline {
         stage('Validate') {
             steps {
                 // Validate the project structure
-                sh "${MAVEN_HOME}/bin/mvn validate"
+                bat "${MAVEN_HOME}/bin/mvn validate"
             }
         }
 
         stage('Compile') {
             steps {
                 // Compile the source code
-                sh "${MAVEN_HOME}/bin/mvn compile"
+                bat "${MAVEN_HOME}/bin/mvn compile"
             }
         }
 
         stage('Test') {
             steps {
                 // Run unit tests with Maven
-                sh "${MAVEN_HOME}/bin/mvn test"
+                bat "${MAVEN_HOME}/bin/mvn test"
             }
         }
 
         stage('Package') {
             steps {
                 // Package the application into a JAR or WAR
-                sh "${MAVEN_HOME}/bin/mvn package"
+                bat "${MAVEN_HOME}/bin/mvn package"
             }
         }
 
