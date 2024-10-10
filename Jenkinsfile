@@ -11,7 +11,7 @@ pipeline {
         //JAVA_HOME = '/usr/lib/jvm/java-11-openjdk'
 
         // WINDOWS
-        MAVEN_HOME = 'C:\\Program Files\\Apache\\apache-maven-3.8.6'
+        MAVEN_HOME = 'C:\\Maven\\apache-maven-3.9.9'
         JAVA_HOME = 'C:\\Program Files\\Java\\jdk-17'
 
         // macOS
