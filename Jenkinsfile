@@ -25,6 +25,14 @@ pipeline {
     }
 
     stages {
+            stage('Test') {
+                steps {
+                    echo 'Hello, Jenkins!'
+                }
+            }
+        }
+/*
+    stages {
         stage('Checkout') {
             steps {
                 // Checkout the code from your repository
@@ -89,4 +97,5 @@ pipeline {
             echo 'Pipeline failed!'
         }
     }
+    */
 }
