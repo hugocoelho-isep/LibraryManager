@@ -35,7 +35,7 @@ pipeline {
             stage('Build') {
                 steps {
                     // Clean, compile, and package the application using Maven
-                    sh "${MAVEN_HOME}/bin/mvn clean install"
+                    bat "${MAVEN_HOME}/bin/mvn clean install"
                 }
             }
         }
