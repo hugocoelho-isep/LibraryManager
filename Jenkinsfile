@@ -25,9 +25,10 @@ pipeline {
     }
 
     stages {
-            stage('Test') {
+            stage('Checkout') {
                 steps {
-                    echo 'Hello, Jenkins!'
+                    // Checkout the code from your repository
+                    git url: "${GITHUB_URL}", branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_ID}"
                 }
             }
         }
