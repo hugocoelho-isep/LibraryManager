@@ -31,6 +31,13 @@ pipeline {
                     git url: "${GITHUB_URL}", branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_ID}"
                 }
             }
+
+            stage('Build') {
+                steps {
+                    // Clean, compile, and package the application using Maven
+                    sh "${MAVEN_HOME}/bin/mvn clean install"
+                }
+            }
         }
 /*
     stages {
