@@ -25,20 +25,48 @@ pipeline {
     }
 
     stages {
-            stage('Checkout') {
-                steps {
-                    // Checkout the code from your repository
-                    git url: "${GITHUB_URL}", branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_ID}"
-                }
-            }
-
-            stage('Build') {
-                steps {
-                    // Clean, compile, and package the application using Maven
-                    bat "${MAVEN_HOME}/bin/mvn clean install"
-                }
+        stage('Checkout') {
+            steps {
+                // Checkout the code from your repository
+                git url: "${GITHUB_URL}", branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_ID}"
             }
         }
+
+        stage('Build') {
+            steps {
+                // Clean, compile, and package the application using Maven
+                bat "${MAVEN_HOME}/bin/mvn clean install"
+            }
+        }
+        stage('Validate') {
+            steps {
+                // Validate the project structure
+                sh "${MAVEN_HOME}/bin/mvn validate"
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                // Compile the source code
+                sh "${MAVEN_HOME}/bin/mvn compile"
+            }
+        }
+
+        stage('Test') {
+            steps {
+                // Run unit tests with Maven
+                sh "${MAVEN_HOME}/bin/mvn test"
+            }
+        }
+
+        stage('Package') {
+            steps {
+                // Package the application into a JAR or WAR
+                sh "${MAVEN_HOME}/bin/mvn package"
+            }
+        }
+
+    }
 /*
     stages {
         stage('Checkout') {
