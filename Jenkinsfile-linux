@@ -72,12 +72,12 @@ pipeline {
                     """
 
                     sh """
-                    scp -o StrictHostKeyChecking=no -i \$SSH_KEY -P 10864 target/psoft-g1-0.0.1-SNAPSHOT.jar root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
+                    scp -i \$SSH_KEY -P 10864 target/psoft-g1-0.0.1-SNAPSHOT.jar root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
                     """
 
                     echo "Deploying application..."
                     // Run the Spring Boot application on the remote server with the overridden server port
-                    // sh 'ssh user@remote-server "nohup java -jar /path/to/deploy/my-app.jar --server.port=8081 > /dev/null 2>&1 &"'
+                    // sh 'ssh -i \$SSH_KEY -p 10864 root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager "nohup java -jar /path/to/deploy/my-app.jar --server.port=8081 > /dev/null 2>&1 &"'
 
                 }
             }
