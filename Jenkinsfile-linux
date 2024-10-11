@@ -67,7 +67,7 @@ pipeline {
                     // Securely copy the jar file to the remote server
 
                     sh """
-                    scp -i -o StrictHostKeyChecking=no \$SSH_KEY -P 10864 target/psoft-g1-0.0.1-SNAPSHOT.jar user@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
+                    scp -o StrictHostKeyChecking=no -i \$SSH_KEY -P 10864 target/psoft-g1-0.0.1-SNAPSHOT.jar user@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
                     """
 
                     echo "Deploying application..."
