@@ -59,6 +59,24 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                // Use the SSH key with the specified credentials ID
+                withCredentials([sshUserPrivateKey(credentialsId: '7eb36415-50fb-4aae-a98f-6635a04b00a6', keyFileVariable: 'SSH_KEY')]) {
+
+                    // Securely copy the jar file to the remote server
+                    sh 'scp -i \$SSH_KEY -P 10864 target/my-app.jar user@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager'
+
+                    echo "Deploying application..."
+                    // Run the Spring Boot application on the remote server with the overridden server port
+                    // sh 'ssh user@remote-server "nohup java -jar /path/to/deploy/my-app.jar --server.port=8081 > /dev/null 2>&1 &"'
+
+                }
+            }
+        }
+
+        // pscp -P 10864 psoft-g1-0.0.1-SNAPSHOT.jar root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
+
     }
 /*
     stages {

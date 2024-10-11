@@ -66,6 +66,19 @@ pipeline {
             }
         }
 
+        stage('Deploy') {
+            steps {
+                // Securely copy the jar file to the remote server
+                bat 'scp target/my-app.jar user@remote-server:/path/to/deploy/'
+
+                echo "Deploying application..."
+                // Run the Spring Boot application on the remote server with the overridden server port
+                // bat 'ssh user@remote-server "nohup java -jar /path/to/deploy/my-app.jar --server.port=8081 > /dev/null 2>&1 &"'
+            }
+        }
+
+        // pscp -P 10864 psoft-g1-0.0.1-SNAPSHOT.jar root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
+
     }
 /*
     stages {
