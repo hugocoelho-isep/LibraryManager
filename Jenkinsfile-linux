@@ -65,7 +65,8 @@ pipeline {
                 withCredentials([sshUserPrivateKey(credentialsId: '7eb36415-50fb-4aae-a98f-6635a04b00a6', keyFileVariable: 'SSH_KEY')]) {
 
                     // Securely copy the jar file to the remote server
-                    sh 'scp -i $SSH_KEY -P 10864 target/my-app.jar user@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager'
+                    echo "Secure copy with key ${SSH_KEY}"
+                    sh 'scp -i ${SSH_KEY} -P 10864 target/my-app.jar user@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager'
 
                     echo "Deploying application..."
                     // Run the Spring Boot application on the remote server with the overridden server port
