@@ -64,8 +64,19 @@ pipeline {
                 // Use the SSH key with the specified credentials ID
                 withCredentials([sshUserPrivateKey(credentialsId: '7eb36415-50fb-4aae-a98f-6635a04b00a6', keyFileVariable: 'SSH_KEY')]) {
 
-                    // terminate any project that's running on port 2228
-                    sh 'ssh -i \$SSH_KEY -p 10864 root@vsgate-ssh.dei.isep.ipp.pt "kill -9 $(lsof -t -i:2228)"'
+                   // Stop the old version of the application running on port 2228
+                   sh """
+                   ssh -i \$SSH_KEY -o StrictHostKeyChecking=no -p 10864 root@vsgate-ssh.dei.isep.ipp.pt '
+                       # Find the PID of the process running on port 2228 and kill it
+                       pid=\$(lsof -ti:2228)
+                       if [ ! -z "\$pid" ]; then
+                           echo "Killing process ID: \$pid on port 2228"
+                           kill -9 \$pid
+                       else
+                           echo "No process found running on port 2228."
+                       fi
+                   '
+                   """
 
                     // Securely copy the jar file to the remote server
                     sh """
