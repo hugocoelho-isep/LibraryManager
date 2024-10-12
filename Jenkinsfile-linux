@@ -77,7 +77,7 @@ pipeline {
 
                     echo "Deploying application..."
                     // Run the Spring Boot application on the remote server with the overridden server port
-                    sh 'ssh -i \$SSH_KEY -p 10864 root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager "nohup java -jar /path/to/deploy/my-app.jar --server.port=2228 > /dev/null 2>&1 &"'
+                    sh 'ssh -i \$SSH_KEY -p 10864 root@vsgate-ssh.dei.isep.ipp.pt "nohup java -jar /usr/local/librarymanager/psoft-g1-0.0.1-SNAPSHOT.jar --server.port=2228 > /dev/null 2>&1 &"'
 
                 }
             }
