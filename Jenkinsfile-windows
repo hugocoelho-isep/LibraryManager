@@ -71,101 +71,43 @@ pipeline {
                 // Use the SSH key with the specified credentials ID
                 sshagent(['7eb36415-50fb-4aae-a98f-6635a04b00a6']) {
 
-                   // Stop the old version of the application running on port 2228
-                   bat """
-                   ssh -o StrictHostKeyChecking=no -p 10864 root@vsgate-ssh.dei.isep.ipp.pt '
-                       # Find the PID of the process running on port 2228 and kill it
-                       pid=\$(lsof -ti:2228)
-                       if [ ! -z "\$pid" ]; then
-                           echo "Killing process ID: \$pid on port 2228"
-                           kill -9 \$pid
-                       else
-                           echo "No process found running on port 2228."
-                       fi
-                   '
-                   """
+                    // Stop the old version of the application running on port 2228
+                    script {
+                        echo "Stopping old application version..."
+                        bat """
+                        ssh -o StrictHostKeyChecking=no -p 10864 root@vsgate-ssh.dei.isep.ipp.pt '
+                            # Find the PID of the process running on port 2228 and kill it
+                            pid=\$(lsof -ti:2228)
+                            if [ ! -z "\$pid" ]; then
+                                echo "Killing process ID: \$pid on port 2228"
+                                kill -9 \$pid
+                            else
+                                echo "No process found running on port 2228."
+                            fi
+                        '
+                        """
+                    }
 
-                    // Secure copy of the project
-                    bat """
-                    pscp -P 10864 target/psoft-g1-0.0.1-SNAPSHOT.jar root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
-                    """
+                    // Secure copy of the JAR file to the server
+                    script {
+                        echo "Copying new JAR to the server..."
+                        bat """
+                        pscp -P 10864 target/psoft-g1-0.0.1-SNAPSHOT.jar root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
+                        """
+                    }
 
-                    echo "Deploying application..."
-                    // Run the Spring Boot application on the remote server with the overridden server port
-                    bat 'ssh -p 10864 root@vsgate-ssh.dei.isep.ipp.pt "nohup java -jar /usr/local/librarymanager/psoft-g1-0.0.1-SNAPSHOT.jar --server.port=2228 > /dev/null 2>&1 &"'
-
+                    // Deploy the new application version
+                    script {
+                        echo "Deploying application..."
+                        bat """
+                        ssh -o StrictHostKeyChecking=no -p 10864 root@vsgate-ssh.dei.isep.ipp.pt '
+                            nohup java -jar /usr/local/librarymanager/psoft-g1-0.0.1-SNAPSHOT.jar --server.port=2228 > /dev/null 2>&1 &
+                        '
+                        """
+                    }
                 }
-            }
         }
-
-        // pscp -P 10864 psoft-g1-0.0.1-SNAPSHOT.jar root@vsgate-ssh.dei.isep.ipp.pt:/usr/local/librarymanager
 
     }
-/*
-    stages {
-        stage('Checkout') {
-            steps {
-                // Checkout the code from your repository
-                git url: "${GITHUB_URL}", branch: "${GITHUB_BRANCH}", credentialsId: "${GITHUB_ID}"
-            }
-        }
 
-        stage('Build') {
-            steps {
-                // Clean, compile, and package the application using Maven
-                sh "${MAVEN_HOME}/bin/mvn clean install"
-            }
-        }
-
-        stage('Validate') {
-            steps {
-                // Validate the project structure
-                sh "${MAVEN_HOME}/bin/mvn validate"
-            }
-        }
-
-        stage('Compile') {
-            steps {
-                // Compile the source code
-                sh "${MAVEN_HOME}/bin/mvn compile"
-            }
-        }
-
-        stage('Test') {
-            steps {
-                // Run unit tests with Maven
-                sh "${MAVEN_HOME}/bin/mvn test"
-            }
-        }
-
-        stage('Package') {
-            steps {
-                // Package the application into a JAR or WAR
-                sh "${MAVEN_HOME}/bin/mvn package"
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                // Deploy to your server or container platform (adjust the steps as necessary)
-                sh '''
-                echo "Deploying application..."
-                # For example, you can use SCP to copy the jar/war to a server
-                scp target/your-app.jar user@server:/path/to/deploy/
-                '''
-            }
-        }
-    }
-
-    post {
-        success {
-            // Actions to take when the pipeline succeeds
-            echo 'Pipeline completed successfully!'
-        }
-        failure {
-            // Actions to take when the pipeline fails
-            echo 'Pipeline failed!'
-        }
-    }
-    */
 }
